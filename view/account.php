@@ -95,16 +95,7 @@
                     <i class="fa fa-user" aria-hidden="true"></i>Tài khoản của tôi</a
                   >
                 </li>
-                <li class="contact-list account-list" id="history">
-                  <a href="#" class="contact-link account-link" data-tab="2">
-                    <i class="fa fa-calendar-check-o" aria-hidden="true"></i>Lịch sử mua hàng</a
-                  >
-                </li>
-                <li class="contact-list account-list" style="display:none" id="history-order">
-                  <a href="#" class="contact-link account-link" data-tab="2">
-                    <i class="fa fa-product-hunt" aria-hidden="true"></i>Đơn hàng</a
-                  >
-                </li>
+                
                 <li class="contact-list account-list">
                   <a href="index.php?pg=logoutuser" class="contact-link account-link">
                   <i class="fas fa-sign-out-alt"></i>Đăng xuất</a
@@ -145,10 +136,7 @@
                   <label for="">Địa chỉ</label> <br />
                   <input name="diachi" type="text" value="<?=$diachi?>" />
                 </div>
-                <div class="product-btn account-btn">
-                  <button name="update_account" class="button-primary">Cập nhật tài khoản</button>
-                  <button name="del_account" class="button-primary button-del">Xoá tài khoản</button>
-                </div>
+               
                 </div>
               
               <div class="account-right-image">
