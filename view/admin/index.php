@@ -13,13 +13,15 @@
     include_once "../../model/cart.php";
     include_once "../../model/user.php";
     include_once "../../model/donhang.php";
-
-
+    include_once "../../model/giamgia.php";
+    include_once "../../model/comment.php";
     include_once "../../model/thongke.php";
     include_once "../../model/global.php";
     include_once "../../model/new.php";
     include_once "../../model/img_product_img.php";
-
+    include_once "../../model/design.php";
+    include_once "../../model/voucher.php";
+    include_once "../../model/giamgia.php";
 
    
    include_once "header.php";
@@ -428,113 +430,472 @@
             }
             include_once 'user.php';
             break;
-          case 'img_product_color':
-            $img_product_color=get_img_product_color();
-            include_once 'img_product_color.php';
-            break;
-          case 'add_img_product_color':
+          case 'adduser':
+            $err_useradd='';
+            $err_passadd='';
+            $err_emailadd='';
+        
+            
             if(isset($_POST['btnsave'])){
-              $main_img=$_FILES['img1']['name'];
-              if($main_img!=''){
-                $target_file1 = PATH_IMG_ADMIN . basename($main_img);
-                move_uploaded_file($_FILES['img1']["tmp_name"], $target_file1);
+              $nameadd=$_POST['name'];
+              $useradd=$_POST['user'];
+              $passadd=$_POST['pass'];
+              $emailadd=$_POST['email'];
+              $sdtadd=$_POST['sdt'];
+              $gioitinh=$_POST['gioitinh'];
+              $ngaysinhadd=$_POST['ngaysinh'];
+              $diachiadd=$_POST['diachi'];
+              $role=$_POST['role'];
+              $kichhoat=$_POST['kichhoat'];
+              $_SESSION['adduser']=1;
+              $usertable=getusertable();
+              
+              if($useradd==''){
+                $err_useradd="*Bạn chưa nhập tên người dùng";
+              }else{
+                foreach ($usertable as $item) {
+                  if($item['user']==$useradd){
+                    $err_useradd="*Tên người dùng này đã tồn tại";
+                    break;
+                  }
+                }
               }
-              $sub_img1=$_FILES['img2']['name'];
-              if($sub_img1!=''){
-                $target_file2 = PATH_IMG_ADMIN . basename($sub_img1);
-                move_uploaded_file($_FILES['img2']["tmp_name"], $target_file2);
+              if($passadd==''){
+                $err_passadd="*Bạn chưa nhập mật khẩu";
               }
-              $sub_img2=$_FILES['img3']['name'];
-              if($sub_img2!=''){
-                $target_file3 = PATH_IMG_ADMIN . basename($sub_img2);
-                move_uploaded_file($_FILES['img3']["tmp_name"], $target_file3);
+              if($emailadd==''){
+                $err_emailadd="*Bạn chưa nhập địa chỉ email";
+              }else{
+                if (!filter_var($emailadd, FILTER_VALIDATE_EMAIL)){
+                  $err_emailadd="*Địa chỉ email không hợp lệ";
+                }else{
+                  foreach ($usertable as $item) {
+                    if($item['email']==$emailadd){
+                      $err_emailadd="*Địa chỉ email này đã được sử dụng";
+                      break;
+                    }
+                  }
+                }
               }
-              $sub_img3=$_FILES['img4']['name'];
-              if( $sub_img3!=''){
-                $target_file4 = PATH_IMG_ADMIN . basename($sub_img3);
-                move_uploaded_file($_FILES['img4']["tmp_name"], $target_file4);
-              }
-              $id_product=$_POST['id_product'];
-              $id_color=$_POST['id_color'];
-              create_img_product_color($main_img, $sub_img1, $sub_img2, $sub_img3, $id_product, $id_color );
-            }
-            $img_product_color=get_img_product_color();
-            include_once "img_product_color.php";
-            break;
+              
+              
 
-          case 'update_img_product_color':
+              if($gioitinh=='Khác'){
+                $gioitinh=0;
+              }else{
+                if($gioitinh=='Nam'){
+                  $gioitinh=1;
+                }else{
+                  $gioitinh=2;
+                }
+              }
+              if($role=='Khách hàng'){
+                $role=0;
+              }else{
+                $role=1;
+              }
+              if($kichhoat=='Kích hoạt'){
+                $kichhoat=1;
+              }else{
+                $kichhoat=0;
+              }
+
+              
+
+
+              $img=$_FILES['img1']['name'];
+              if($img!=''){
+                $target_file = PATH_IMG_ADMIN . basename($img);
+                move_uploaded_file($_FILES['img1']["tmp_name"], $target_file);
+              }
+              if($err_useradd=='' &&  $err_passadd=='' && $err_emailadd==''){
+                unset($_SESSION['adduser']);
+                $user=getusertable();
+                creatuser($useradd,$passadd, $nameadd,$emailadd,$sdtadd,$gioitinh,$ngaysinhadd,$diachiadd,$role,$img,$kichhoat);
+              }
+            }
+            if(isset($_GET['close']) && $_GET['close']){
+              unset($_SESSION['adduser']);
+            }
+            $usertable=getusertable();
+            include_once "user.php";
+            break;
+          case 'updateuser':
+            $err_userup='';
+            $err_passup='';
+            $err_emailup='';
             if(isset($_GET['id']) && $_GET['id']){
               $_SESSION['update_id']=$_GET['id'];
-              $img_product_color_detail=getdetail_product($_SESSION['update_id']);
+              $user_detail=getuser($_SESSION['update_id']);
+            }
+            if(isset($_SESSION['update_id'])){
+              $user_detail=getuser($_SESSION['update_id']);
             }
             if(isset($_GET['close']) && $_GET['close']){
               unset($_SESSION['update_id']);
             }
             if(isset($_POST['btnupdate'])){
-              $main_img=$_FILES['img5']['name'];
-              if($main_img!=''){
-                $target_file = PATH_IMG_ADMIN . basename($main_img);
-                move_uploaded_file($_FILES['img5']["tmp_name"], $target_file);
-                if($_POST['hinhcu1']!=''){
-                  $hinhcu1=PATH_IMG_ADMIN.$_POST['hinhcu1'];
-                  delimghost($hinhcu1);
-              }
+              $name=$_POST['name'];
+              $user=$_POST['user'];
+              $pass=$_POST['pass'];
+              $email=$_POST['email'];
+              $sdt=$_POST['sdt'];
+              $gioitinh=$_POST['gioitinh'];
+              $ngaysinh=$_POST['ngaysinh'];
+              $diachi=$_POST['diachi'];
+              $role=$_POST['role'];
+              $kichhoat=$_POST['kichhoat'];
+              $_SESSION['edituser']=1;
+              $usertable=getusertable();
+              if($user==''){
+                $err_userup="*Bạn chưa nhập tên người dùng";
               }else{
-                if($main_img==''){
-                  $main_img=$_POST['hinhcu1'];
+                foreach ($usertable as $item) {
+                  if($item['user']==$user && $item['user']!=$user_detail['user']){
+                    $err_userup="*Tên người dùng này đã tồn tại";
+                    break;
+                  }
                 }
               }
-              $sub_img1=$_FILES['img6']['name'];
-              if($sub_img1!=''){
-                $target_file2 = PATH_IMG_ADMIN . basename($sub_img1);
-                move_uploaded_file($_FILES['img6']["tmp_name"], $target_file2);
-                if($_POST['hinhcu2']!=''){
-                  $hinhcu2=PATH_IMG_ADMIN.$_POST['hinhcu2'];
-                  delimghost($hinhcu2);
+              if($pass==''){
+                $err_passup="*Bạn chưa nhập mật khẩu";
               }
+              if($email==''){
+                $err_emailup="*Bạn chưa nhập địa chỉ email";
               }else{
-                if($sub_img1==''){
-                  $sub_img1=$_POST['hinhcu2'];
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                  $err_emailup="*Địa chỉ email không hợp lệ";
+                }else{
+                  foreach ($usertable as $item) {
+                    if($item['email']==$email && $item['email']!=$user_detail['email']){
+                      $err_emailup="*Địa chỉ email này đã được sử dụng";
+                      break;
+                    }
+                  }
                 }
               }
-              $sub_img2=$_FILES['img7']['name'];
-              if($sub_img2!=''){
-                $target_file3 = PATH_IMG_ADMIN . basename($sub_img2);
-                move_uploaded_file($_FILES['img7']["tmp_name"], $target_file3);
-                if($_POST['hinhcu3']!=''){
-                  $hinhcu3=PATH_IMG_ADMIN.$_POST['hinhcu3'];
-                  delimghost($hinhcu3);
-              }
+
+
+              if($gioitinh=='Khác'){
+                $gioitinh=0;
               }else{
-                if($sub_img2==''){
-                  $sub_img2=$_POST['hinhcu3'];
+                if($gioitinh=='Nam'){
+                  $gioitinh=1;
+                }else{
+                  $gioitinh=2;
                 }
               }
-              $sub_img3=$_FILES['img8']['name'];
-              if( $sub_img3!=''){
-                $target_file4 = PATH_IMG_ADMIN . basename($sub_img3);
-                move_uploaded_file($_FILES['img8']["tmp_name"], $target_file4);
-                if($_POST['hinhcu4']!=''){
-                  $hinhcu4=PATH_IMG_ADMIN.$_POST['hinhcu4'];
-                  delimghost($hinhcu4);
-              }
+              if($role=='Khách hàng'){
+                $role=0;
               }else{
-                if($sub_img3==''){
-                  $sub_img3=$_POST['hinhcu3'];
+                $role=1;
+              }
+              if($kichhoat=='Kích hoạt'){
+                $kichhoat=1;
+              }else{
+                $kichhoat=0;
+              }
+              $img=$_FILES['img2']['name'];
+              if($img!=''){
+                $target_file = PATH_IMG_ADMIN . basename($img);
+                move_uploaded_file($_FILES['img2']["tmp_name"], $target_file);
+                if($_POST['hinhcu']!=''){
+                    $hinhcu=PATH_IMG_ADMIN.$_POST['hinhcu'];
+                    delimghost($hinhcu);
+                }
+              }else{
+                if($img==''){
+                  $img=$_POST['hinhcu'];
                 }
               }
-              $id_product=$_POST['id_product'];
-              $id_color=$_POST['id_color'];
-              if(isset($_SESSION['update_id'])){
-                update_img_product_color($_SESSION['update_id'],$main_img, $sub_img1, $sub_img2, $sub_img3, $id_product, $id_color);
+              if(isset($_SESSION['update_id']) && $err_userup==''  && $err_passup=='' && $err_emailup==''){
+                update_user($_SESSION['update_id'],$user,$pass, $name,$email,$sdt,$gioitinh,$ngaysinh,$diachi,$role,$img,$kichhoat);
                 unset($_SESSION['update_id']);
+                unset($_SESSION['edituser']);
               }    
             }
-            $img_product_color=get_img_product_color();
-            include_once 'img_product_color.php';
+            $usertable=getusertable();
+            include_once 'user.php';
             break;
+          case 'deluser':
+            if(isset($_GET['id']) && $_GET['id']){
+              $id=$_GET['id'];
+              if(getuser($id)['img']!=''){
+                $img_file=PATH_IMG_ADMIN.getuser($id)['img'];
+                delimghost($img_file);
+             }
+              deluser($_GET['id']);
+            }
+            $usertable=getusertable();
+            include_once 'user.php';
+            break;
+          case 'cart':
+            $cart = getcarttable();
+            if(isset($_POST['searchcart'])){
+              $cart=searchcart($_POST['keywordcart']);
+            }
+            include_once 'cart.php';
+            break;
+          case 'delcart':
+            if (isset($_GET['id']) && $_GET['id']) {
+              $id_user = $_GET['id'];
+      
+              del_cart($_GET['id']);
+            }
+            $cart = getcarttable();
+            include_once 'cart.php';
+            break;
+          case 'donhang':
+              $donhang = getdonhangtable();
+              if(isset($_POST['searchdonhang'])){
+                $donhang=searchdonhang($_POST['keyworddonhang']);
+              }
+          include_once 'donhang.php';
+          break;
+              case 'deldonhang':
+                if (isset($_GET['id']) && $_GET['id']) {
+                  $id_donhang = $_GET['id'];
+                  
+                  // del_cart($_GET['id']);
+                  deldonhang($_GET['id']);
+                }
+                $donhang = getdonhangtable();
+                include_once 'donhang.php';
+                break;
+              case 'binhluan':
+                $binhluan = getcomment();
+                include_once 'binhluan.php';
+                break;
+              case 'delbinhluan':
+                if (isset($_GET['id']) && $_GET['id']) {
+                  $id_user = $_GET['id'];
+                  delcomment($_GET['id']);
+                }
+                $binhluan = getcomment();
+                include_once 'binhluan.php';
+                break;
 
-          case 'del_img_product_color':
+                case 'tintuc':
+                  $tintuc=getnew_home();
+                  include_once 'tintuc.php';
+                  break;
+                case 'add_tintuc':
+                  if(isset($_POST['btnsave'])){
+                    // $id=$_POST['id'];
+                    $id='';
+                    $title=$_POST['title'];
+                    $thoigian=$_POST['thoigian'];
+                    $noidung=$_POST['noidung'];
+                    $img=$_FILES['img']['name'];
+                    if($img!=''){
+                      $target_file = PATH_IMG_ADMIN . basename($img);
+                    move_uploaded_file($_FILES['img']["tmp_name"], $target_file);
+                      }
+                      create_tintuc($id, $title, $img, $noidung, $thoigian);
+                    }
+                      $tintuc=getnew_home();
+                  include_once "tintuc.php";
+                  break;
+                case 'update_tintuc':
+                  if(isset($_GET['id']) && $_GET['id']){
+                    $_SESSION['update_id']=$_GET['id'];
+                    $tintuc_detail=getdetail($_SESSION['update_id']);
+                  }
+                  if(isset($_GET['close']) && $_GET['close']){
+                    unset($_SESSION['update_id']);
+                  }
+                  if(isset($_POST['btnupdate'])){
+                    $id='';
+                    $title=$_POST['title'];
+                    $thoigian=$_POST['thoigian'];
+                    $noidung=$_POST['noidung'];
+                    $img=$_FILES['img1']['name'];
+                    if($img!=''){
+                      $target_file = PATH_IMG_ADMIN . basename($img);
+                      move_uploaded_file($_FILES['img1']["tmp_name"], $target_file);
+      
+                      }
+                    if(isset($_SESSION['update_id'])){
+                      update_tintuc($_SESSION['update_id'],$title, $img, $noidung, $thoigian );
+                      unset($_SESSION['update_id']);
+                    }    
+                  }
+                  $tintuc=getnew_home();
+                  include_once 'tintuc.php';
+                  break;
+                case 'del_tintuc':
+                  if(isset($_GET['id']) && $_GET['id']){
+                    $id=$_GET['id'];
+                    if(get_idtintuc($id)['img']!=''){
+                      $img_file=PATH_IMG_ADMIN.get_idtintuc($id)['img'];
+                      delimghost($img_file);
+                   }
+                    del_tintuc($_GET['id']);
+                  }
+                  $tintuc=getnew_home();
+                  include_once 'tintuc.php';
+                  break;
+      
+      
+                  case 'voucher':
+                    $voucher= get_voucher();
+                    include_once 'voucher.php';
+                    break;
+                  case 'add_voucher':
+                    if(isset($_POST['btnsave'])){
+                      // $id=$_POST['id'];
+                      $id='';
+                      $ma_voucher=$_POST['mavoucher'];
+                      $giamgia=$_POST['dale'];
+                      $ngaybatdau=$_POST['start'];
+                      $ngayketthuc=$_POST['end'];
+                      $dieukien=$_POST['dk'];
+                      create_voucher($id, $ma_voucher, $giamgia, $ngaybatdau, $ngayketthuc, $dieukien);
+                      }
+                      $voucher= get_voucher();
+                    include_once "voucher.php";
+                    break;
+                  case 'update_voucher':
+                    if(isset($_GET['id']) && $_GET['id']){
+                      $_SESSION['update_id']=$_GET['id'];
+                      $voucher_detail=get_detail_voucher($_SESSION['update_id']);
+                    }
+                    if(isset($_GET['close']) && $_GET['close']){
+                      unset($_SESSION['update_id']);
+                    }
+                    if(isset($_POST['btnupdate'])){
+                      $id='';
+                      $ma_voucher=$_POST['mavoucher'];
+                      $giamgia=$_POST['dale'];
+                      $ngaybatdau=$_POST['start'];
+                      $ngayketthuc=$_POST['end'];
+                      $dieukien=$_POST['dk'];
+                      if(isset($_SESSION['update_id'])){
+                        update_voucher($_SESSION['update_id'],$ma_voucher, $giamgia, $ngaybatdau, $ngayketthuc, $dieukien);
+                        unset($_SESSION['update_id']);
+                      }    
+                    }
+                    $voucher= get_voucher();
+                    include_once 'voucher.php';
+                    break;
+                  case 'del_voucher':
+                    if(isset($_GET['id']) && $_GET['id']){
+                      $id=$_GET['id'];
+                      del_voucher($_GET['id']);
+                    }
+                    $voucher= get_voucher();
+                    include_once 'voucher.php';
+                    break;  
+      
+                  
+                case 'img_product_color':
+                  $img_product_color=get_img_product_color();
+                  include_once 'img_product_color.php';
+                  break;
+      
+                case 'add_img_product_color':
+                  if(isset($_POST['btnsave'])){
+                    $main_img=$_FILES['img1']['name'];
+                    if($main_img!=''){
+                      $target_file1 = PATH_IMG_ADMIN . basename($main_img);
+                      move_uploaded_file($_FILES['img1']["tmp_name"], $target_file1);
+                    }
+                    $sub_img1=$_FILES['img2']['name'];
+                    if($sub_img1!=''){
+                      $target_file2 = PATH_IMG_ADMIN . basename($sub_img1);
+                      move_uploaded_file($_FILES['img2']["tmp_name"], $target_file2);
+                    }
+                    $sub_img2=$_FILES['img3']['name'];
+                    if($sub_img2!=''){
+                      $target_file3 = PATH_IMG_ADMIN . basename($sub_img2);
+                      move_uploaded_file($_FILES['img3']["tmp_name"], $target_file3);
+                    }
+                    $sub_img3=$_FILES['img4']['name'];
+                    if( $sub_img3!=''){
+                      $target_file4 = PATH_IMG_ADMIN . basename($sub_img3);
+                      move_uploaded_file($_FILES['img4']["tmp_name"], $target_file4);
+                    }
+                    $id_product=$_POST['id_product'];
+                    $id_color=$_POST['id_color'];
+                    create_img_product_color($main_img, $sub_img1, $sub_img2, $sub_img3, $id_product, $id_color );
+                  }
+                  $img_product_color=get_img_product_color();
+                  include_once "img_product_color.php";
+                  break;
+      
+                case 'update_img_product_color':
+                  if(isset($_GET['id']) && $_GET['id']){
+                    $_SESSION['update_id']=$_GET['id'];
+                    $img_product_color_detail=getdetail_product($_SESSION['update_id']);
+                  }
+                  if(isset($_GET['close']) && $_GET['close']){
+                    unset($_SESSION['update_id']);
+                  }
+                  if(isset($_POST['btnupdate'])){
+                    $main_img=$_FILES['img5']['name'];
+                    if($main_img!=''){
+                      $target_file = PATH_IMG_ADMIN . basename($main_img);
+                      move_uploaded_file($_FILES['img5']["tmp_name"], $target_file);
+                      if($_POST['hinhcu1']!=''){
+                        $hinhcu1=PATH_IMG_ADMIN.$_POST['hinhcu1'];
+                        delimghost($hinhcu1);
+                    }
+                    }else{
+                      if($main_img==''){
+                        $main_img=$_POST['hinhcu1'];
+                      }
+                    }
+                    $sub_img1=$_FILES['img6']['name'];
+                    if($sub_img1!=''){
+                      $target_file2 = PATH_IMG_ADMIN . basename($sub_img1);
+                      move_uploaded_file($_FILES['img6']["tmp_name"], $target_file2);
+                      if($_POST['hinhcu2']!=''){
+                        $hinhcu2=PATH_IMG_ADMIN.$_POST['hinhcu2'];
+                        delimghost($hinhcu2);
+                    }
+                    }else{
+                      if($sub_img1==''){
+                        $sub_img1=$_POST['hinhcu2'];
+                      }
+                    }
+                    $sub_img2=$_FILES['img7']['name'];
+                    if($sub_img2!=''){
+                      $target_file3 = PATH_IMG_ADMIN . basename($sub_img2);
+                      move_uploaded_file($_FILES['img7']["tmp_name"], $target_file3);
+                      if($_POST['hinhcu3']!=''){
+                        $hinhcu3=PATH_IMG_ADMIN.$_POST['hinhcu3'];
+                        delimghost($hinhcu3);
+                    }
+                    }else{
+                      if($sub_img2==''){
+                        $sub_img2=$_POST['hinhcu3'];
+                      }
+                    }
+                    $sub_img3=$_FILES['img8']['name'];
+                    if( $sub_img3!=''){
+                      $target_file4 = PATH_IMG_ADMIN . basename($sub_img3);
+                      move_uploaded_file($_FILES['img8']["tmp_name"], $target_file4);
+                      if($_POST['hinhcu4']!=''){
+                        $hinhcu4=PATH_IMG_ADMIN.$_POST['hinhcu4'];
+                        delimghost($hinhcu4);
+                    }
+                    }else{
+                      if($sub_img3==''){
+                        $sub_img3=$_POST['hinhcu3'];
+                      }
+                    }
+                    $id_product=$_POST['id_product'];
+                    $id_color=$_POST['id_color'];
+                    if(isset($_SESSION['update_id'])){
+                      update_img_product_color($_SESSION['update_id'],$main_img, $sub_img1, $sub_img2, $sub_img3, $id_product, $id_color);
+                      unset($_SESSION['update_id']);
+                    }    
+                  }
+                  $img_product_color=get_img_product_color();
+                  include_once 'img_product_color.php';
+                  break;
+      
+                case 'del_img_product_color':
                   if(isset($_GET['id']) && $_GET['id']){
                     $id=$_GET['id'];
                   //   if(getuser($id)['img']!=''){
@@ -545,18 +906,29 @@
                   }
                   $img_product_color=get_img_product_color();
                   include_once 'img_product_color.php';
-                  break;
-          case 'logout':
-          unset($_SESSION['loginuser']);
-          unset($_SESSION['role']);
-          unset($_SESSION['iduser']);
-          unset($_SESSION['usernamelogin']);
-          unset($_SESSION['passwordlogin']);
-          header('location: index.php');
-          break;
-          
-          
-              
+                  break;  
+                  case 'dadung_voucher':
+                    $dadung_voucher = get_voucher_id() ;
+                    include_once "dadung_voucher.php";
+                    break;
+      
+                  case 'design':
+                    $design = getdesign();
+                    include_once "design.php";
+                    break;
+      
+                  case 'img_design':
+                    $imgdesign = getimgdesign();
+                    include_once "imgdesign.php";
+                    break;
+              case 'logout':
+                unset($_SESSION['loginuser']);
+                unset($_SESSION['role']);
+                unset($_SESSION['iduser']);
+                unset($_SESSION['usernamelogin']);
+                unset($_SESSION['passwordlogin']);
+                header('location: index.php');
+                break;
          default:
             
             include_once "dashboard.php";

@@ -85,27 +85,36 @@
               Tài khoản
             </a>
           </li>
-           
           <li class="dashboard-menu-list">
-            <a href="index.php?pg=donhang" class="dashboard-menu-link" data-tab="6">
+            <a href="index.php?pg=donhang" class="dashboard-menu-link" data-tab="5">
               <i class="fa fa-shopping-bag " aria-hidden="true"></i>
               Đơn hàng
             </a>
           </li>
           <li class="dashboard-menu-list">
-            <a href="index.php?pg=cart" class="dashboard-menu-link" data-tab="7">
+            <a href="index.php?pg=cart" class="dashboard-menu-link" data-tab="6">
               <i class="	fa fa-shopping-cart" aria-hidden="true"></i>
               Giỏ hàng
             </a>
           </li>
-          
           <li class="dashboard-menu-list">
-            <a href="index.php?pg=img_product_color" class="dashboard-menu-link" data-tab="5">
+            <a href="index.php?pg=binhluan" class="dashboard-menu-link" data-tab="7">
+              <i class="fa fa-commenting" aria-hidden="true"></i>
+              Bình luận
+            </a>
+          </li>
+          <li class="dashboard-menu-list">
+            <a href="index.php?pg=tintuc" class="dashboard-menu-link" data-tab="8">
+            <ion-icon name="newspaper"></ion-icon>
+              Tin tức
+            </a>
+          </li>
+          <li class="dashboard-menu-list">
+            <a href="index.php?pg=img_product_color" class="dashboard-menu-link" data-tab="9">
             <ion-icon name="image"></ion-icon>
               Hình ảnh sản phẩm
             </a>
           </li>
-          
           <li class="dashboard-menu-list">
             <a href="index.php?pg=voucher" class="dashboard-menu-link" data-tab="10">
             <ion-icon name="gift"></ion-icon>
@@ -118,7 +127,18 @@
               Voucher đã dùng
             </a>
           </li>
-          
+          <li class="dashboard-menu-list">
+            <a href="index.php?pg=design" class="dashboard-menu-link" data-tab="12">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+              Design
+            </a>
+          </li>
+          <li class="dashboard-menu-list">
+            <a href="index.php?pg=img_design" class="dashboard-menu-link" data-tab="13">
+            <ion-icon name="images"></ion-icon>
+              Ảnh design
+            </a>
+          </li>
           <li class="dashboard-menu-list">
             <a href="index.php?pg=logout" class="dashboard-menu-link">
               <i class="fa fa-sign-out" aria-hidden="true"></i>

@@ -1,17 +1,18 @@
 <?php
-$active   = $active   ?? '';
-$name     = $name     ?? '';
-$user     = $user     ?? '';
-$pass     = $pass     ?? '';
-$email    = $email    ?? '';
-$sdt      = $sdt      ?? '';
-$gioitinh = $gioitinh ?? '';
-$ngaysinh = $ngaysinh ?? '';
-$diachi   = $diachi   ?? '';
-$hinhcu   = $hinhcu   ?? '';
-$role     = $role     ?? '';
-$kichhoat = $kichhoat ?? '';
-$img      = $img      ?? 'user.webp';
+/* --- DEFAULTS cho modal update user --- */
+$active    = '';
+$name      = '';
+$user      = '';
+$pass      = '';
+$email     = '';
+$sdt       = '';
+$gioitinh  = '';
+$ngaysinh  = '';
+$diachi    = '';
+$role      = '';
+$kichhoat  = '';
+$img       = 'user.webp';  // ảnh mặc định
+$hinhcu    = '';
 $html_donhang = '';
 $i = 1;
 foreach ($donhang as $item) {

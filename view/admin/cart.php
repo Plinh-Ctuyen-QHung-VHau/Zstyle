@@ -1,6 +1,4 @@
 <?php
-$html_cart = '';
-
 /* --- DEFAULTS cho modal update user --- */
 $active    = '';
 $name      = '';
@@ -15,6 +13,7 @@ $role      = '';
 $kichhoat  = '';
 $img       = 'user.webp';  // ảnh mặc định
 $hinhcu    = '';
+$html_cart = '';
 foreach ($cart as $item) {
     extract($item);
     if (check_img_admin($img) == '') {
