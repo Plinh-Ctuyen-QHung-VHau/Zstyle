@@ -1,16 +1,22 @@
 <?php
-   /**
- * Mở kết nối đến CSDL sử dụng PDO
+/**
+ * Docker Database Connection Configuration
+ * Use this configuration when running in Docker environment
  */
 function pdo_get_connection(){
-   $dburl = "mysql:host=localhost;dbname=zstyle;charset=utf8";
-   $username = 'root';
-   $password = '';
-
+   // Get database credentials from environment variables or use defaults
+   $host = getenv('DB_HOST') ?: 'database';
+   $dbname = getenv('DB_NAME') ?: 'zstyle';
+   $username = getenv('DB_USER') ?: 'root';
+   $password = getenv('DB_PASSWORD') ?: '1234';
+   
+   $dburl = "mysql:host=$host;dbname=$dbname;charset=utf8";
+   
    $conn = new PDO($dburl, $username, $password);
    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
    return $conn;
 }
+
 /**
 * Thực thi câu lệnh sql thao tác dữ liệu (INSERT, UPDATE, DELETE)
 * @param string $sql câu lệnh sql
@@ -31,6 +37,7 @@ function pdo_execute($sql){
        unset($conn);
    }
 }
+
 /**
 * Thực thi câu lệnh sql truy vấn dữ liệu (SELECT)
 * @param string $sql câu lệnh sql
@@ -54,11 +61,12 @@ function pdo_query($sql){
        unset($conn);
    }
 }
+
 /**
 * Thực thi câu lệnh sql truy vấn một bản ghi
 * @param string $sql câu lệnh sql
 * @param array $args mảng giá trị cung cấp cho các tham số của $sql
-* @return array mảng chứa bản ghi
+* @return array mảng bản ghi
 * @throws PDOException lỗi thực thi câu lệnh
 */
 function pdo_query_one($sql){
@@ -77,6 +85,7 @@ function pdo_query_one($sql){
        unset($conn);
    }
 }
+
 /**
 * Thực thi câu lệnh sql truy vấn một giá trị
 * @param string $sql câu lệnh sql
