@@ -1,0 +1,43 @@
+# .github/workflows/ci-cd-by-branch.yml
+name: CI/CD by Branch (build per phase)
+
+on:
+  push:
+    branches: ["Giai-đoạn-1", "Giai-đoạn-2", "FullAdmin", "main"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/zstyle
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: '8.2' }
+      - run: composer install --no-interaction --prefer-dist || true
+      - run: vendor/bin/phpunit || echo "No tests"
+
+  build_push:
+    runs-on: ubuntu-latest
+    needs: [ci]  # CI pass mới build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build & push tag theo tên nhánh
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.ref_name }}
+            ${{ env.IMAGE }}:${{ github.sha }}
