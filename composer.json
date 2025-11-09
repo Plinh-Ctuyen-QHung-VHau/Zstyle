@@ -2,6 +2,7 @@
     "name": "zstyle/e-commerce",
     "description": "Zstyle E-commerce Platform - Automation Testing",
     "type": "project",
+    "license": "MIT",
     "require": {
         "php": ">=8.0",
         "guzzlehttp/guzzle": "^7.8"
