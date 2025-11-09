@@ -73,14 +73,18 @@ jobs:
           mkdir -p upload
           chmod -R 777 upload
 
-      - name: Start PHP built-in server
+      - name: Start PHP built-in server with DB config
         run: |
-          php -S localhost:8080 -t . > /dev/null 2>&1 &
+          export DB_HOST=127.0.0.1
+          export DB_NAME=zstyle  
+          export DB_USER=zstyle_user
+          export DB_PASSWORD=zstyle_password
+          php -S localhost:8080 -t . > server.log 2>&1 &
           sleep 3
           
       - name: Verify server is running
         run: |
-          curl -f http://localhost:8080/index.php || exit 1
+          curl -f http://localhost:8080/index.php || (cat server.log && exit 1)
 
       - name: Run API Tests
         env:
@@ -137,6 +141,10 @@ jobs:
 
       - name: Start PHP built-in server (accessible from containers)
         run: |
+          export DB_HOST=127.0.0.1
+          export DB_NAME=zstyle
+          export DB_USER=zstyle_user
+          export DB_PASSWORD=zstyle_password
           php -S 0.0.0.0:8080 -t . > server.log 2>&1 &
           sleep 5
           
@@ -204,6 +212,10 @@ jobs:
 
       - name: Start PHP built-in server (accessible from containers)
         run: |
+          export DB_HOST=127.0.0.1
+          export DB_NAME=zstyle
+          export DB_USER=zstyle_user
+          export DB_PASSWORD=zstyle_password
           php -S 0.0.0.0:8080 -t . > server.log 2>&1 &
           sleep 5
           
@@ -266,6 +278,10 @@ jobs:
 
       - name: Start PHP built-in server (accessible from containers)
         run: |
+          export DB_HOST=127.0.0.1
+          export DB_NAME=zstyle
+          export DB_USER=zstyle_user
+          export DB_PASSWORD=zstyle_password
           php -S 0.0.0.0:8080 -t . > server.log 2>&1 &
           sleep 5
           
