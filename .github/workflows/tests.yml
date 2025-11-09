@@ -28,7 +28,7 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Run Unit Tests
-        run: vendor/bin/phpunit --testsuite Unit --testdox --no-logging --dont-report-warnings
+        run: vendor/bin/phpunit --testsuite Unit --testdox --no-logging
 
   api-tests:
     name: API Tests
@@ -88,7 +88,7 @@ jobs:
       - name: Run API Tests
         env:
           APP_URL: http://localhost:8080
-        run: vendor/bin/phpunit --testsuite API --testdox --no-logging --dont-report-warnings
+        run: vendor/bin/phpunit --testsuite API --testdox --no-logging
 
   ui-tests:
     name: Functional UI Tests
@@ -159,7 +159,7 @@ jobs:
         env:
           APP_URL: http://172.17.0.1:8080
           SELENIUM_URL: http://localhost:4444/wd/hub
-        run: vendor/bin/phpunit --testsuite Functional-UI --testdox --no-logging --dont-report-warnings
+        run: vendor/bin/phpunit --testsuite Functional-UI --testdox --no-logging
 
   e2e-tests:
     name: E2E Tests
@@ -230,7 +230,7 @@ jobs:
         env:
           APP_URL: http://172.17.0.1:8080
           SELENIUM_URL: http://localhost:4444/wd/hub
-        run: vendor/bin/phpunit --testsuite E2E --testdox --no-logging --dont-report-warnings
+        run: vendor/bin/phpunit --testsuite E2E --testdox --no-logging
 
   smoke-tests:
     name: Smoke Tests (Quick Verification)
@@ -296,7 +296,7 @@ jobs:
         env:
           APP_URL: http://172.17.0.1:8080
           SELENIUM_URL: http://localhost:4444/wd/hub
-        run: vendor/bin/phpunit --testsuite Smoke --testdox --no-logging --dont-report-warnings
+        run: vendor/bin/phpunit --testsuite Smoke --testdox --no-logging
 
   coverage:
     name: Test Coverage
@@ -357,7 +357,7 @@ jobs:
       - name: Run tests with coverage (Unit + API only)
         env:
           APP_URL: http://localhost:8080
-        run: vendor/bin/phpunit --testsuite Unit,API --coverage-clover coverage.xml --no-logging --dont-report-warnings
+        run: vendor/bin/phpunit --testsuite Unit,API --coverage-clover coverage.xml --no-logging
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
