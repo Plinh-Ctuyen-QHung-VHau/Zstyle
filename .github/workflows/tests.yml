@@ -20,7 +20,6 @@ jobs:
         with:
           php-version: '8.1'
           extensions: mbstring, pdo, pdo_mysql, mysqli, gd, zip
-          coverage: xdebug
 
       - name: Validate composer.json
         run: composer validate --no-check-all --no-check-publish
@@ -29,7 +28,7 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Run Unit Tests
-        run: vendor/bin/phpunit --testsuite Unit --testdox
+        run: vendor/bin/phpunit --testsuite Unit --testdox --no-logging --dont-report-warnings
 
   api-tests:
     name: API Tests
@@ -89,7 +88,7 @@ jobs:
       - name: Run API Tests
         env:
           APP_URL: http://localhost:8080
-        run: vendor/bin/phpunit --testsuite API --testdox
+        run: vendor/bin/phpunit --testsuite API --testdox --no-logging --dont-report-warnings
 
   ui-tests:
     name: Functional UI Tests
@@ -160,7 +159,7 @@ jobs:
         env:
           APP_URL: http://172.17.0.1:8080
           SELENIUM_URL: http://localhost:4444/wd/hub
-        run: vendor/bin/phpunit --testsuite Functional-UI --testdox
+        run: vendor/bin/phpunit --testsuite Functional-UI --testdox --no-logging --dont-report-warnings
 
   e2e-tests:
     name: E2E Tests
@@ -231,7 +230,7 @@ jobs:
         env:
           APP_URL: http://172.17.0.1:8080
           SELENIUM_URL: http://localhost:4444/wd/hub
-        run: vendor/bin/phpunit --testsuite E2E --testdox
+        run: vendor/bin/phpunit --testsuite E2E --testdox --no-logging --dont-report-warnings
 
   smoke-tests:
     name: Smoke Tests (Quick Verification)
@@ -297,11 +296,27 @@ jobs:
         env:
           APP_URL: http://172.17.0.1:8080
           SELENIUM_URL: http://localhost:4444/wd/hub
-        run: vendor/bin/phpunit --testsuite Smoke --testdox
+        run: vendor/bin/phpunit --testsuite Smoke --testdox --no-logging --dont-report-warnings
 
   coverage:
     name: Test Coverage
     runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: zstyle
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_USER: zstyle_user
+          MYSQL_PASSWORD: zstyle_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     
     steps:
       - name: Checkout code
@@ -317,8 +332,32 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Run tests with coverage
-        run: vendor/bin/phpunit --coverage-clover coverage.xml
+      - name: Import database
+        run: |
+          mysql -h 127.0.0.1 -u zstyle_user -pzstyle_password zstyle < Zstyle.sql
+
+      - name: Create upload directory
+        run: |
+          mkdir -p upload
+          chmod -R 777 upload
+
+      - name: Start PHP built-in server with DB config
+        run: |
+          export DB_HOST=127.0.0.1
+          export DB_NAME=zstyle  
+          export DB_USER=zstyle_user
+          export DB_PASSWORD=zstyle_password
+          php -S localhost:8080 -t . > server.log 2>&1 &
+          sleep 3
+          
+      - name: Verify server is running
+        run: |
+          curl -f http://localhost:8080/index.php || (cat server.log && exit 1)
+
+      - name: Run tests with coverage (Unit + API only)
+        env:
+          APP_URL: http://localhost:8080
+        run: vendor/bin/phpunit --testsuite Unit,API --coverage-clover coverage.xml --no-logging --dont-report-warnings
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

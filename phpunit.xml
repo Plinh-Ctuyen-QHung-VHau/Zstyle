@@ -36,12 +36,21 @@
         
     </testsuites>
     <php>
-        <env name="APP_URL" value="http://zstyle_webserver:80"/>
-        <env name="SELENIUM_URL" value="http://selenium_chrome:4444/wd/hub"/>
+        <env name="APP_URL" value="http://localhost:8080"/>
+        <env name="SELENIUM_URL" value="http://localhost:4444/wd/hub"/>
     </php>
     <coverage>
         <report>
             <html outputDirectory="coverage"/>
         </report>
     </coverage>
+    <source>
+        <include>
+            <directory suffix=".php">model</directory>
+        </include>
+        <exclude>
+            <directory>vendor</directory>
+            <directory>tests</directory>
+        </exclude>
+    </source>
 </phpunit>
