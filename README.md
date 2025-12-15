@@ -22,6 +22,8 @@
 
 ## Features
 
+![](screenshot/architecture.png)
+
 ### Customer Features
 
 - **Product Browsing & Search**
