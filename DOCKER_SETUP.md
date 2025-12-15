@@ -33,6 +33,7 @@ docker-compose up -d
 ```
 
 This command will:
+
 - Build the web server image
 - Download MySQL and phpMyAdmin images
 - Create and start all containers
@@ -43,6 +44,7 @@ This command will:
 The first time you run this, it may take a few minutes to download images and set up the database.
 
 Check the status of containers:
+
 ```bash
 docker-compose ps
 ```
@@ -56,12 +58,14 @@ docker-compose ps
 ### 5. Database Credentials
 
 **For Application (Docker):**
+
 - Host: `database`
 - Database: `zstyle`
 - Username: `zstyle_user`
 - Password: `zstyle_password`
 
 **For phpMyAdmin:**
+
 - Server: `database`
 - Username: `root`
 - Password: `root_password`
@@ -74,26 +78,31 @@ OR
 ## Docker Commands
 
 ### Start Containers
+
 ```bash
 docker-compose up -d
 ```
 
 ### Stop Containers
+
 ```bash
 docker-compose stop
 ```
 
 ### Stop and Remove Containers
+
 ```bash
 docker-compose down
 ```
 
 ### Stop and Remove Containers + Volumes (Delete Database Data)
+
 ```bash
 docker-compose down -v
 ```
 
 ### View Logs
+
 ```bash
 # All services
 docker-compose logs
@@ -108,16 +117,19 @@ docker-compose logs -f webserver
 ```
 
 ### Restart Containers
+
 ```bash
 docker-compose restart
 ```
 
 ### Rebuild Web Server
+
 ```bash
 docker-compose up -d --build webserver
 ```
 
 ### Execute Commands in Container
+
 ```bash
 # Access bash in web server
 docker-compose exec webserver bash
@@ -133,6 +145,7 @@ docker-compose exec database mysql -u zstyle_user -p zstyle
 When running in Docker, you need to update the database connection file:
 
 **Option 1: Rename the Docker config file (Recommended)**
+
 ```bash
 # Windows PowerShell
 Rename-Item model\connectdb.php model\connectdb.local.php
@@ -146,6 +159,7 @@ mv model/connectdb.docker.php model/connectdb.php
 **Option 2: Manually update `model/connectdb.php`**
 
 Replace the connection details:
+
 ```php
 function pdo_get_connection(){
    $dburl = "mysql:host=database;dbname=zstyle;charset=utf8";
@@ -158,10 +172,12 @@ function pdo_get_connection(){
 ## File Permissions
 
 The Dockerfile automatically sets proper permissions for:
+
 - `/var/www/html/upload` - For uploaded product images
 - `/var/www/html/view/layout/assets/images` - For static images
 
 If you encounter permission issues:
+
 ```bash
 docker-compose exec webserver chmod -R 777 /var/www/html/upload
 docker-compose exec webserver chmod -R 777 /var/www/html/view/layout/assets/images
@@ -172,6 +188,7 @@ docker-compose exec webserver chmod -R 777 /var/www/html/view/layout/assets/imag
 ### Issue: Containers won't start
 
 **Solution**: Check if ports are already in use
+
 ```bash
 # Windows
 netstat -ano | findstr :8080
@@ -189,12 +206,15 @@ If ports are in use, either stop the conflicting services or change ports in `do
 ### Issue: Database connection error
 
 **Solution 1**: Wait for database to be fully ready
+
 ```bash
 docker-compose logs database
 ```
+
 Look for "ready for connections" message.
 
 **Solution 2**: Restart the web server after database is ready
+
 ```bash
 docker-compose restart webserver
 ```
@@ -202,6 +222,7 @@ docker-compose restart webserver
 ### Issue: Can't see uploaded images
 
 **Solution**: Check volume mounts and permissions
+
 ```bash
 docker-compose exec webserver ls -la /var/www/html/upload
 docker-compose exec webserver chmod -R 777 /var/www/html/upload
@@ -210,6 +231,7 @@ docker-compose exec webserver chmod -R 777 /var/www/html/upload
 ### Issue: Changes to code not reflecting
 
 **Solution**: The code directory is mounted as a volume, so changes should be immediate. Try:
+
 ```bash
 docker-compose restart webserver
 ```
@@ -217,6 +239,7 @@ docker-compose restart webserver
 ### Issue: Need to reset database
 
 **Solution**: Remove volume and restart
+
 ```bash
 docker-compose down -v
 docker-compose up -d
@@ -246,6 +269,7 @@ environment:
 ```
 
 Create `.env` file:
+
 ```
 DB_HOST=database
 DB_NAME=zstyle
@@ -256,11 +280,13 @@ DB_PASSWORD=your_secure_password_here
 ## Backup and Restore
 
 ### Backup Database
+
 ```bash
 docker-compose exec database mysqldump -u zstyle_user -pzstyle_password zstyle > backup.sql
 ```
 
 ### Restore Database
+
 ```bash
 docker-compose exec -T database mysql -u zstyle_user -pzstyle_password zstyle < backup.sql
 ```
@@ -290,6 +316,7 @@ docker-compose down -v
 ## Support
 
 If you encounter any issues:
+
 1. Check the logs: `docker-compose logs`
 2. Verify all containers are running: `docker-compose ps`
 3. Check the main README.md for application-specific issues

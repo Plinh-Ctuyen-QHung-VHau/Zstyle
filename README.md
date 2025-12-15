@@ -12,6 +12,7 @@
 - [Project Structure](#project-structure)
 - [Usage](#usage)
 - [Admin Panel](#admin-panel)
+- [Interface Screens](#interface-screens-user-interface-overview)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -177,6 +178,7 @@ docker-compose up -d
 ```
 
 The Docker setup includes:
+
 - **Web Server**: PHP 8.1 + Apache (Port 8080)
 - **Database**: MySQL 8.0 (Port 3307)
 - **phpMyAdmin**: Database management interface (Port 8081)
@@ -416,6 +418,50 @@ The system sends automated emails for:
 **Issue**: Session errors
 
 - **Solution**: Ensure PHP session is enabled and `session.save_path` is writable
+
+## Interface Screens (User Interface Overview)
+
+This section outlines the primary user interface screens available in the application, corresponding to the visual assets located in the `screenshot/` directory. These screens serve as the basis for UI/UX validation and functional testing.
+
+### Customer Interface
+
+The customer-facing interface facilitates product discovery, account management, and transaction processing.
+
+### UI Screens
+
+| Screen          | Preview                                                      |
+| --------------- | ------------------------------------------------------------ |
+| Home Page       | ![](screenshot/home.png)<br/>![](screenshot/home2.png)       |
+| Product List    | ![](screenshot/product.png)<br/>![](screenshot/featured.png) |
+| Product Detail  | ![](screenshot/product-detail.png)                           |
+| Cart            | ![](screenshot/cart.png)                                     |
+| Checkout        | ![](screenshot/checkout.png)                                 |
+| Login           | ![](screenshot/login.png)                                    |
+| Sign Up         | ![](screenshot/sign-up.png)                                  |
+| Forgot Password | ![](screenshot/forgot-password.png)                          |
+| Profile         | ![](screenshot/profile.png)                                  |
+| Order History   | ![](screenshot/history.png)                                  |
+| News            | ![](screenshot/news.png)                                     |
+| About           | ![](screenshot/about.png)                                    |
+| Contact         | ![](screenshot/contact.png)                                  |
+| Policy          | ![](screenshot/policy.png)                                   |
+
+## Admin Interface
+
+The admin interface provides management capabilities for system data and business operations.
+
+### UI Screens
+
+| Screen                   | Preview                                                                      |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| Admin Dashboard          | ![](screenshot/admin-dashboard.png)                                          |
+| Product Management       | ![](screenshot/manager-product.png)<br/>![](screenshot/manager-product2.png) |
+| Product Image Management | ![](screenshot/manager-img-product.png)                                      |
+| Order Management         | ![](screenshot/manager-order.png)<br/>![](screenshot/order.png)              |
+| User Management          | ![](screenshot/manager-user.png)                                             |
+| Voucher Management       | ![](screenshot/manager-voucher.png)                                          |
+| Comment Management       | ![](screenshot/manager-comment.png)                                          |
+| News Management          | ![](screenshot/manager-news.png)                                             |
 
 ## Contributing
 
