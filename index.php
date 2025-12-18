@@ -770,7 +770,7 @@
                      if($errnamenhan=='' && $erremailnhan=='' && $errdiachinhan=='' && $errsdtnhan==''){
                         $_SESSION['username']=creatusername($emaildat);
                         $_SESSION['password']=creatpass();
-                        creatuser($_SESSION['username'],$_SESSION['password'], $tendat,$emaildat,$sdtdat,0,'',$diachidat,0,'',1);
+                        creatuser($_SESSION['username'],$_SESSION['password'], $tendat,$emaildat,$sdtdat,0,NULL,$diachidat,0,'',1);
                         $_SESSION['iduser']=getidusercu($_SESSION['username'],$_SESSION['password']);
                         $_SESSION['loginuser']=0;
                         $_SESSION['role']=getrole($_SESSION['username'],$_SESSION['password']);
@@ -791,7 +791,7 @@
                      if($errname=='' && $erremail=='' && $errdiachi=='' && $errsdt==''){
                         $_SESSION['username']=creatusername($emaildat);
                         $_SESSION['password']=creatpass();
-                        creatuser($_SESSION['username'],$_SESSION['password'], $tendat,$emaildat,$sdtdat,0,'',$diachidat,0,'',1);
+                        creatuser($_SESSION['username'],$_SESSION['password'], $tendat,$emaildat,$sdtdat,0,NULL,$diachidat,0,'',1);
                         $_SESSION['iduser']=getidusercu($_SESSION['username'],$_SESSION['password']);
                         $_SESSION['loginuser']=0;
                         $_SESSION['role']=getrole($_SESSION['username'],$_SESSION['password']);
@@ -1071,7 +1071,7 @@
                   unset($_SESSION['passwordsignup']);
                   unset($_SESSION['emailsignup']);
                   unset($_SESSION['repasswordsignup']);
-                  creatuser($user,$pass, '',$email,'','','','',0,'',1);
+                  creatuser($user,$pass, '',$email,'',0,NULL,'',0,'',1);
                   header('location: index.php?pg=login');
                }
             }
